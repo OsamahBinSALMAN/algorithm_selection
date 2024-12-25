@@ -63,6 +63,14 @@ def evaluate():
     if file.filename == '':
         return jsonify({"status": "error", "message": "No selected file"}), 400
 
+    roblem_type = request.form['problem_type']
+    if roblem_type == '':
+        return jsonify({"status": "error", "message": "No problem type file"}), 400
+        
+    dataset_area = request.form['dataset_area']
+    if dataset_area == '':
+        return jsonify({"status": "error", "message": "No dataset area file"}), 400
+
     if file and allowed_file(file.filename):
         # Save file to the uploads folder
         filepath = os.path.join(UPLOAD_FOLDER, file.filename)
