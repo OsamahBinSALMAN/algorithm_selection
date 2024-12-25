@@ -4,3 +4,5 @@ flask-cors
 numpy
 scikit-learn
 pandas
+statsmodels
+statistics
