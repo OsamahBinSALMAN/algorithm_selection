@@ -31,7 +31,7 @@ def evaluate():
 
         return jsonify({"status": "success", "data": result})
     except Exception as e:
-        return jsonify({"status": "error", "message": str(e)})
+        return jsonify({"status": "error", "message": "hahahaahha"})
 
 if __name__ == '__main__':
     app.run(debug=True)
