@@ -13,6 +13,7 @@ def evaluate():
         file = request.json['file']
         problem_type = request.json['problem_type']
         dataset_area = request.json['dataset_area']
+        return jsonify({"status": "error", "message": file.filename})
 
         # Validate file type
         if not (file.filename.endswith('.csv') or file.filename.endswith('.xlsx')):
