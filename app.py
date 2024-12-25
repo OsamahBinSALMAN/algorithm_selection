@@ -148,23 +148,22 @@ def evaluate():
             # You can perform any necessary data processing here
             # For example, analyzing the columns based on problem type and dataset area
             result_data = {
-                "Area":dataset_area,
-                "Problem":problem_type,
-                "Number of featuers":number_of_featuers,
-                "Number of samples":number_of_samples,
-                "Data type":data_type,
-                "Output Varibles":classes,
-                "Ortalama Corr":ortalama,
-                "Ortanca Corr":ortanca,
-                "Std Corr":std,
-                "Absolute Ortalama Corr":abs_ortalama,
-                "Absolute Ortanca Corr":abs_ortanca,
-                "Absolute Std Corr":abs_std,
-                "Resized Corr":resize_Corr_list,
-                "Wilks":Wilks,
-                "Pilais":Pilais,
-                "Hotelling":Hotelling,
-                "Roys":Roys
+                "Application Area":dataset_area,
+                "Number Of Featuers":number_of_featuers,
+                "Number Of Sampels":number_of_samples,
+                "Data Type":data_type,
+                "Number Of Output":classes,
+                "Mean Correlation":ortalama,
+                "Median Correlation":ortanca,
+                "Std Correlation":std,
+                "Mean Absoulte Correlation":abs_ortalama,
+                "Median Absoulte Correlation":abs_ortanca,
+                "Std Absoulte Correlation":abs_std,
+                "Size Reduction Correlation":resize_Corr_list,
+                "MANOVA Wilks Lambda":Wilks,
+                "MANOVA Pillais Trace":Pilais,
+                "MANOVA Hotelling Lawley Trace":Hotelling,
+                "MANOVA Roys Greatest Root":Roys
                 
             }
 
