@@ -74,15 +74,15 @@ def evaluate():
     if file.filename == '':
         return jsonify({"status": "error", "message": "No selected file"}), 400
 
-    roblem_type = request.form['problem_type']
-    if roblem_type == '':
+    problem_type = request.form['problem_type']
+    if problem_type == '':
         return jsonify({"status": "error", "message": "No problem type file"}), 400
         
     dataset_area = request.form['dataset_area']
     if dataset_area == '':
         return jsonify({"status": "error", "message": "No dataset area file"}), 400
 
-    if file and allowed_file(file.filename):
+    if file and allowed_file(file.filename) and problem_type=='Regression':
         # Save file to the uploads folder
         filepath = os.path.join(UPLOAD_FOLDER, file.filename)
         file.save(filepath)
@@ -140,14 +140,30 @@ def evaluate():
             Hotelling=round(Hotelling/classes,5)
             Roys=round(Roys/classes,5)
 
-        
+                Data_ozellikleri=[]
+
             # You can perform any necessary data processing here
             # For example, analyzing the columns based on problem type and dataset area
             result_data = {
-                "dataset_area":dataset_area,
-                "roblem_type":roblem_type,
-                "columns": data.columns.tolist(),
-                "head": data.head().to_dict(orient='records')
+                "Area":dataset_area,
+                "Problem":problem_type,
+                "Columns": data.columns.tolist(),
+                "Number of featuers":number_of_featuers,
+                "Number of samples":number_of_samples,
+                "Data type":data_type,
+                "Output Varibles":classes,
+                "Ortalama Corr":ortalama,
+                "Ortanca Corr":ortanca,
+                "Std Corr":std,
+                "Absolute Ortalama Corr":abs_ortalama,
+                "Absolute Ortanca Corr":abs_ortanca,
+                "aAbsolute Std Corr":abs_std,
+                "Resized Corr":resize_Corr_list,
+                "Wilks":Wilks,
+                "Pilais":Pilais,
+                "Hotelling":Hotelling,
+                "Roys":Roys
+                
             }
 
             # Prepare a success response
