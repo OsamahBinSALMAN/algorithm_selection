@@ -10,9 +10,9 @@ CORS(app)
 def evaluate():
     try:
         # Get file and dropdown values
-        file = request.files['file']
-        problem_type = request.form['problem_type']
-        dataset_area = request.form['dataset_area']
+        file = request.json['file']
+        problem_type = request.json['problem_type']
+        dataset_area = request.json['dataset_area']
 
         # Validate file type
         if not (file.filename.endswith('.csv') or file.filename.endswith('.xlsx')):
