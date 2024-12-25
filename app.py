@@ -150,7 +150,6 @@ def evaluate():
             result_data = {
                 "Area":dataset_area,
                 "Problem":problem_type,
-                "Columns": data.columns.tolist(),
                 "Number of featuers":number_of_featuers,
                 "Number of samples":number_of_samples,
                 "Data type":data_type,
@@ -160,7 +159,7 @@ def evaluate():
                 "Std Corr":std,
                 "Absolute Ortalama Corr":abs_ortalama,
                 "Absolute Ortanca Corr":abs_ortanca,
-                "aAbsolute Std Corr":abs_std,
+                "Absolute Std Corr":abs_std,
                 "Resized Corr":resize_Corr_list,
                 "Wilks":Wilks,
                 "Pilais":Pilais,
