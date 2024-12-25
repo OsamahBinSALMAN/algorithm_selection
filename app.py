@@ -103,7 +103,7 @@ def evaluate():
             number_of_samples=len(data)-1
             
             if number_of_featuers<1:
-                return jsonify({"status": "error", "message": "The output variables are not found, so please modify the output variable names to follow a sequential format: output_n, where n is an integer starting from 1 and increments up to the total number of outputs generated. For example, the first output should be named output_1, the second output_2, and so on, ensuring that each output is labeled with a unique number corresponding to its position in the sequence. This format will help properly track and organize the outputs."}), 400
+                return jsonify({"status": "error", "message": "The output variables are not found, so please modify the output variable names to follow a sequential format: outputn, where n is an integer starting from 1 and increments up to the total number of outputs generated. For example, the first output should be named output1, the second output2, and so on, ensuring that each output is labeled with a unique number corresponding to its position in the sequence. This format will help properly track and organize the outputs."}), 400
             dtype_=[a1.name for a1 in list(data.dtypes)]
             
             if "object" not in dtype_:
