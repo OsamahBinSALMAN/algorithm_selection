@@ -97,6 +97,8 @@ def evaluate():
                 return jsonify({"status": "error", "message": "Failed to Read Data"}), 400
 
             number_of_featuers=len([d for d in data.columns if "output" not in d])
+            if True:
+                 return jsonify({"status": "error", "message": "number_of_featuers: "+str(number_of_featuers)}), 400
             if number_of_featuers<1:
                 return jsonify({"status": "error", "message": "The output variables are not found, so please modify the output variable names to follow a sequential format: outputn, where n is an integer starting from 1 and increments up to the total number of outputs generated. For example, the first output should be named output1, the second output2, and so on, ensuring that each output is labeled with a unique number corresponding to its position in the sequence. This format will help properly track and organize the outputs."}), 400
             
