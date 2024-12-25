@@ -140,7 +140,6 @@ def evaluate():
             Hotelling=round(Hotelling/classes,5)
             Roys=round(Roys/classes,5)
 
-                Data_ozellikleri=[]
 
             # You can perform any necessary data processing here
             # For example, analyzing the columns based on problem type and dataset area
