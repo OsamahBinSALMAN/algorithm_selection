@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 
 app = Flask(__name__)
-
+CORS(app)
 @app.route('/evaluate', methods=['POST'])
 def evaluate():
     try:
