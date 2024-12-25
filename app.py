@@ -2,26 +2,38 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS  # CORS kütüphanesini ekledik
 import pickle
 import numpy as np
+import pandas as pd
 
 app = Flask(__name__)
-CORS(app)  # Tüm yollar ve kökenler için CORS'u aktif ediyoruz
 
-# Kaydedilmiş modeli yükle
-with open('bagging_model.pkl', 'rb') as file:
-    model = pickle.load(file)
-
-@app.route('/predict', methods=['POST'])
-def predict():
+@app.route('/evaluate', methods=['POST'])
+def evaluate():
     try:
-        data = request.json['data']  # AJAX ile gelen veriyi al
-        input_array = np.array([float(i) for i in data.split(',')]).reshape(1, -1)  # Veriyi işle
-        prediction = model.predict(input_array)[0]  # Modelden tahmin sonucu al
-        classes=["Argon","Acetone","Methanol"]
-        return jsonify({'prediction': classes[prediction]})  # JSON formatında sonucu döndür
-    
+        # Get file and dropdown values
+        file = request.files['file']
+        problem_type = request.form['problem_type']
+        dataset_area = request.form['dataset_area']
+
+        # Validate file type
+        if not (file.filename.endswith('.csv') or file.filename.endswith('.xlsx')):
+            return jsonify({"status": "error", "message": "Invalid file format. Only CSV or XLSX files are allowed."})
+
+        # Read file into a DataFrame
+        df = pd.read_csv(file) if file.filename.endswith('.csv') else pd.read_excel(file)
+
+        # Example processing based on dropdown values
+        result = {
+            "problem_type": problem_type,
+            "dataset_area": dataset_area,
+            "num_rows": len(df),
+            "num_columns": len(df.columns)
+        }
+
+        return jsonify({"status": "success", "data": result})
     except Exception as e:
-        return jsonify({'error': str(e)})
+        return jsonify({"status": "error", "message": str(e)})
 
 if __name__ == '__main__':
     app.run(debug=True)
+
 
