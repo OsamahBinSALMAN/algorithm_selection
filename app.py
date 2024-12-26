@@ -65,7 +65,24 @@ def Size_reducation(data,c):
     data_pca = pca.transform(df)
     data_pca = pd.DataFrame(data_pca,columns=['PC1'])
     return data_pca,outs
+
+ def CorrelationCalculator_class(data):
     
+    Corr_list=list(data.corr()['Label'])
+    Corr_list=[n for n in Corr_list if n!=1 and str(n)!="nan"]
+    Absoulte_Corr_list=[abs(n) for n in Corr_list if n!=1]
+    
+    return round(statistics.mean(Corr_list),5),round(statistics.median(Corr_list),5),round(statistics.stdev(Corr_list),5),round(statistics.mean(Absoulte_Corr_list),5),round(statistics.median(Absoulte_Corr_list),5),round(statistics.stdev(Absoulte_Corr_list),5)
+  
+def Size_reducation_class(data):
+    df=data.drop(['Label'], axis=1)
+    pca = PCA(n_components =1 )
+    pca.fit(df)
+    data_pca = pca.transform(df)
+    data_pca = pd.DataFrame(data_pca,columns=['PC1'])
+    return pd.concat([data_pca,data['Label']], axis=1)
+
+
 def tahmin(model,dt):
     input_array = np.array(dt).reshape(1, -1)
     prediction = model.predict(input_array)[0]  # Modelden tahmin sonucu al    
@@ -199,6 +216,107 @@ def evaluate():
             return jsonify({"status": "error", "message": str(e)}), 500
     else:
         return jsonify({"status": "error", "message": "Invalid file type. Only CSV or XLSX files are allowed."}), 400
+
+ 
+    if file and allowed_file(file.filename) and problem_type=='Classification':
+        # Save file to the uploads folder
+        filepath = os.path.join(UPLOAD_FOLDER, file.filename)
+        file.save(filepath)
+
+        # Read the file and process it
+        try:
+            if file.filename.endswith('.csv'):
+                data = pd.read_csv(filepath)
+            elif file.filename.endswith('.xlsx'):
+                data = pd.read_excel(filepath)
+            else:
+                return jsonify({"status": "error", "message": "Failed to Read Data"}), 400
+
+            classes=len(list(dict.fromkeys(list(data["Label"]))))  
+            if classes<1:
+                return jsonify({"status": "error", "message": "In classification problems, it is important to rename the output column as 'Label'. The dataset dataset should contain only one output, representing the class or category assigned to each data point. However, even though the output column should be a single column, it can have multiple possible values corresponding to different classes. Each row in the dataset will have a label that indicates the category the data point belongs to. This format helps ensure that the model can correctly learn from the data and allows for better tracking and organization of the predictions during model evaluation. By using a single 'Label' column, you standardize the way outputs are represented, which aids in consistency across different models and datasets. This structure is also crucial when working with algorithms that expect a single target variable, such as classification models in machine learning frameworks."}), 400
+            
+            number_of_featuers=len(data.columns)-1
+            if number_of_featuers<1:
+                return jsonify({"status": "error", "message": "Input variables not found"}), 400
+            
+            data=LossDataAnaliz(data)
+            number_of_samples=len(data)-1
+            if number_of_samples<10:
+                return jsonify({"status": "error", "message": "Samples are less than 10"}), 400
+             
+            dtype_=[a1.name for a1 in list(data.dtypes)]
+            
+            if "object" not in dtype_:
+                data_type="Numerical"    
+            elif (("float64" not in dtype_) and ("int64" not in dtype_)):
+                data_type="Categorical"
+            else:
+                data_type="Both"
+            
+            data=Categorical_Data_Encoding(data)            
+            ortalama,ortanca,std,abs_ortalama,abs_ortanca,abs_std=CorrelationCalculator_class(data)
+            Tek_boyut_data=Size_reducation_class(data)
+            resize_Corr_list=round([ i for i in list(Tek_boyut_data.corr()['Label']) if i!=1][0],5)
+            if str(resize_Corr_list)=="nan":
+                resize_Corr_list=0 
+            
+            names=[n for n in list(data.columns) if n!="Label"]
+            formul=' + '.join(names)+" ~ Label"
+            try:
+                
+                Manova= MANOVA.from_formula(formul, data=data).mv_test().summary_frame
+                Wilks=round(Manova["Value"]["Label"]["Wilks' lambda"],5)
+                Pilais=round(Manova["Value"]["Label"]["Pillai's trace"],5)
+                Hotelling=round(Manova["Value"]["Label"]["Hotelling-Lawley trace"],5)
+                Roys=round(Manova["Value"]["Label"]["Roy's greatest root"],5)
+            except:
+               Wilks,Pilais,Hotelling,Roys=0,0,0,0 
+               pass
+            
+
+            input_data = {
+                "Application Area":dataset_area,
+                "Number Of Featuers":number_of_featuers,
+                "Number Of Sampels":number_of_samples,
+                "Data Type":data_type,
+                "Number Of Classes":classes,
+                "Mean Correlation":ortalama,
+                "Median Correlation":ortanca,
+                "Std Correlation":std,
+                "Mean Absoulte Correlation":abs_ortalama,
+                "Median Absoulte Correlation":abs_ortanca,
+                "Std Absoulte Correlation":abs_std,
+                "Size Reduction Correlation":resize_Corr_list,
+                "MANOVA Wilks Lambda":Wilks,
+                "MANOVA Pillais Trace":Pilais,
+                "MANOVA Hotelling Lawley Trace":Hotelling,
+                "MANOVA Roys Greatest Root":Roys
+                
+            }
+
+            pred_data=[["Economic","Health","Social","Technology & Engineering"].index(dataset_area),number_of_featuers,number_of_samples,["Both","Numerical"].index(data_type),classes,abs_ortalama,abs_ortanca,abs_std,ortalama,ortanca,std,resize_Corr_list,Wilks,Pilais,Hotelling,Roys]
+            model_names=["Coefficient of Determination","Test Time","Tarining Time"]
+            result_data={"Dataset Featuers":input_data}
+            """
+            for model_name in model_names:
+                with open("Regression/"+model_name+'.pkl', 'rb') as file:
+                        model = pickle.load(file)
+
+                result_data[model_name]=tahmin(model,pred_data)
+            """
+            # You can perform any necessary data processing here
+            # For example, analyzing the columns based on problem type and dataset area
+            
+            # Prepare a success response
+            return jsonify({
+                "status": "success",
+                "data": result_data,
+                "message": "File processed successfully"
+            })
+
+        except Exception as e:
+            return jsonify({"status": "error", "message": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
