@@ -302,7 +302,7 @@ def evaluate():
             }
 
             pred_data=[["Economic","Health","Social","Technology & Engineering"].index(dataset_area),number_of_featuers,number_of_samples,["Both","Numerical"].index(data_type),classes,abs_ortalama,abs_ortanca,abs_std,ortalama,ortanca,std,resize_Corr_list,Wilks,Pilais,Hotelling,Roys]
-            model_names=["Accuracy","Test Time ","Tarining Time "]
+            model_names=["Accuracy","Test Time","Tarining Time"]
             result_data={"Dataset Featuers":input_data}
             
             for model_name in model_names:
