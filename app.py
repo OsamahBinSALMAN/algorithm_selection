@@ -214,10 +214,7 @@ def evaluate():
 
         except Exception as e:
             return jsonify({"status": "error", "message": str(e)}), 500
-    else:
-        return jsonify({"status": "error", "message": "Invalid file type. Only CSV or XLSX files are allowed."}), 400
-
- 
+  
     if file and allowed_file(file.filename) and problem_type=='Classification':
         # Save file to the uploads folder
         filepath = os.path.join(UPLOAD_FOLDER, file.filename)
@@ -317,6 +314,9 @@ def evaluate():
 
         except Exception as e:
             return jsonify({"status": "error", "message": str(e)}), 500
+
+    else:
+        return jsonify({"status": "error", "message": "An unexpected error has occurred. Please contact us at osamahkms1994@gmail.com for assistance."}), 400
 
 if __name__ == '__main__':
     app.run(debug=True)
