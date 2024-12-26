@@ -12,7 +12,7 @@ import warnings
  
 warnings.filterwarnings('ignore')
 app = Flask(__name__)
-CORS(app)
+CORS(app,resources={r"/*": {"origins": "https://osamah-salman.neocities.org"}})
 
 
 UPLOAD_FOLDER = 'uploads'
@@ -101,13 +101,13 @@ def tahmin_class(model,dt):
                  "Voting Hard","Random Forest","Calibrated","Bagging","Stacking"]
     sorted_algorithms = [x for _, x in sorted(zip(prediction, algorithms))]
     return sorted_algorithms
-
+"""
 @app.after_request
 def add_csp_header(response):
     # Set CSP to allow connect-src to the specified external API
     response.headers['Content-Security-Policy'] = "connect-src 'self' https://algorithm-selection.onrender.com/evaluate https://osamah-salman.neocities.org;"
     return response
-
+"""
 @app.route('/')
 def index():
     return "Welcome to the Flask App!"
