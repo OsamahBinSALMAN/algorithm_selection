@@ -130,10 +130,10 @@ def evaluate():
             
             data=Categorical_Data_Encoding(data)            
             ortalama,ortanca,std,abs_ortalama,abs_ortanca,abs_std=CorrelationCalculator(data,outputs)
-            Tek_boyut_data,outputs=Size_reducation(data,outputs)
+            Tek_boyut_data,outputs_no=Size_reducation(data,outputs)
             resize_Corr_list=0
             for c in range(outputs):
-                resize_Corr_list+=round(np.corrcoef(list(Tek_boyut_data["PC1"]),list(outputs["output"+str(c+1)]))[0][1],5)
+                resize_Corr_list+=round(np.corrcoef(list(Tek_boyut_data["PC1"]),list(outputs_no["output"+str(c+1)]))[0][1],5)
             resize_Corr_list=round(resize_Corr_list/outputs,5)
             
             names=[n for n in list(data.columns) if "output" not in n]
