@@ -88,7 +88,7 @@ def tahmin(model,dt):
     prediction = model.predict(input_array)[0]  # Modelden tahmin sonucu al    
     algorithms = ["Decision Tree","Ridge Regression","Lasso Regression","Linear Regression","Elastic Net","K-Nearest Neighbors",
                  "Stochastic Gradient Descent","AdaBoost","Gradient Boosting","HistGradientBoosting","Voting Soft",
-                 "Random Forest","Extra Trees,"Bagging"","Stacking"]
+                 "Random Forest","Extra Trees","Bagging","Stacking"]
                  
     sorted_algorithms = [x for _, x in sorted(zip(prediction, algorithms))]
     return sorted_algorithms
