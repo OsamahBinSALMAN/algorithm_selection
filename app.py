@@ -181,7 +181,7 @@ def evaluate():
                 with open("Regression/"+model_name+'.pkl', 'rb') as file:
                         model = pickle.load(file)
 
-                result_data[model_name]=predict(model,pred_data)
+                result_data[model_name]=tahmin(model,pred_data)
             
             # You can perform any necessary data processing here
             # For example, analyzing the columns based on problem type and dataset area
