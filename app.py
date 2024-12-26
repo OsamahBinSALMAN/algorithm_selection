@@ -86,14 +86,22 @@ def Size_reducation_class(data):
 def tahmin(model,dt):
     input_array = np.array(dt).reshape(1, -1)
     prediction = model.predict(input_array)[0]  # Modelden tahmin sonucu al    
-    algorithms = ["Decision Tree","Ridge Regression","Random Forest","Elastic Net",
-                 "Stochastic Gradient Descent","AdaBoost","Gradient Boosting",
-                 "HistGradientBoosting","Voting Soft","Linear Regression",
-                 "Stacking","Lasso Regression","Extra Trees",
-                 "Bagging","K-Nearest Neighbors"]
+    algorithms = ["Decision Tree","Ridge Regression","Lasso Regression","Linear Regression","Elastic Net","K-Nearest Neighbors",
+                 "Stochastic Gradient Descent","AdaBoost","Gradient Boosting","HistGradientBoosting","Voting Soft",
+                 "Random Forest","Extra Trees,"Bagging"","Stacking"]
+                 
     sorted_algorithms = [x for _, x in sorted(zip(prediction, algorithms))]
     return sorted_algorithms
 
+def tahmin_class(model,dt):
+    input_array = np.array(dt).reshape(1, -1)
+    prediction = model.predict(input_array)[0]  # Modelden tahmin sonucu al    
+    algorithms = ["Decision Tree","Support Vector Machine","Multi Layer Perceptron","Naive Bayes","K-Nearest Neighbors",
+                 "Stochastic Gradient Descent","AdaBoost","Gradient Boosting","HistGradientBoosting","Voting Soft",
+                 "Voting Hard","Random Forest","Calibrated","Bagging","Stacking"]
+    sorted_algorithms = [x for _, x in sorted(zip(prediction, algorithms))]
+    return sorted_algorithms
+ 
 @app.route('/evaluate', methods=['POST'])
 def evaluate():
     if 'file' not in request.files:
@@ -294,15 +302,15 @@ def evaluate():
             }
 
             pred_data=[["Economic","Health","Social","Technology & Engineering"].index(dataset_area),number_of_featuers,number_of_samples,["Both","Numerical"].index(data_type),classes,abs_ortalama,abs_ortanca,abs_std,ortalama,ortanca,std,resize_Corr_list,Wilks,Pilais,Hotelling,Roys]
-            model_names=["Coefficient of Determination","Test Time","Tarining Time"]
+            model_names=["Accuracy","Test Time ","Tarining Time "]
             result_data={"Dataset Featuers":input_data}
-            """
+            
             for model_name in model_names:
-                with open("Regression/"+model_name+'.pkl', 'rb') as file:
+                with open("Classification/"+model_name+'.pkl', 'rb') as file:
                         model = pickle.load(file)
 
-                result_data[model_name]=tahmin(model,pred_data)
-            """
+                result_data[model_name]=tahmin_class(model,pred_data)
+            
             # You can perform any necessary data processing here
             # For example, analyzing the columns based on problem type and dataset area
             
