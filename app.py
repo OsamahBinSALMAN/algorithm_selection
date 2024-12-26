@@ -108,6 +108,9 @@ def add_csp_header(response):
     response.headers['Content-Security-Policy'] = "connect-src 'self' https://algorithm-selection.onrender.com;"
     return response
 
+@app.route('/')
+def index():
+    return "Welcome to the Flask App!"
 
 @app.route('/evaluate', methods=['POST'])
 def evaluate():
