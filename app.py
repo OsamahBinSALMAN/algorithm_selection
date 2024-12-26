@@ -63,7 +63,17 @@ def Size_reducation(data,c):
     data_pca = pca.transform(df)
     data_pca = pd.DataFrame(data_pca,columns=['PC1'])
     return data_pca,outs
-
+    
+def tahmin(model,dt):
+    input_array = np.array(dt).reshape(1, -1)
+    prediction = model.predict(input_array)[0]  # Modelden tahmin sonucu al    
+    algorithms = ["Decision Tree","Ridge Regression","Random Forest","Elastic Net",
+                 "Stochastic Gradient Descent","AdaBoost","Gradient Boosting",
+                 "HistGradientBoosting","Voting Soft","Linear Regression",
+                 "Stacking","Lasso Regression","Extra Trees",
+                 "Bagging","K-Nearest Neighbors"]
+    sorted_algorithms = [x for _, x in sorted(zip(prediction, algorithms))]
+    return sorted_algorithms
 
 @app.route('/evaluate', methods=['POST'])
 def evaluate():
@@ -96,8 +106,8 @@ def evaluate():
             else:
                 return jsonify({"status": "error", "message": "Failed to Read Data"}), 400
 
-            classes=len([d for d in data.columns if "output"  in d])  
-            if classes<1:
+            outputs=len([d for d in data.columns if "output"  in d])  
+            if outputs<1:
                 return jsonify({"status": "error", "message": "The output variables are not found, so please modify the output variable names to follow a sequential format: outputn, where n is an integer starting from 1 and increments up to the total number of outputs generated. For example, the first output should be named output1, the second output2, and so on, ensuring that each output is labeled with a unique number corresponding to its position in the sequence. This format will help properly track and organize the outputs."}), 400
             
             number_of_featuers=len([d for d in data.columns if "output" not in d])
@@ -144,15 +154,12 @@ def evaluate():
             Hotelling=round(Hotelling/classes,5)
             Roys=round(Roys/classes,5)
 
-
-            # You can perform any necessary data processing here
-            # For example, analyzing the columns based on problem type and dataset area
-            result_data = {
+            input_data = {
                 "Application Area":dataset_area,
                 "Number Of Featuers":number_of_featuers,
                 "Number Of Sampels":number_of_samples,
                 "Data Type":data_type,
-                "Number Of Output":classes,
+                "Number Of Output":outputs,
                 "Mean Correlation":ortalama,
                 "Median Correlation":ortanca,
                 "Std Correlation":std,
@@ -167,6 +174,18 @@ def evaluate():
                 
             }
 
+            pred_data=[["Economic","Health","Social","Technology & Engineering"].index(dataset_area),number_of_featuers,number_of_samples,["Both","Numerical"].index(data_type),outputs,abs_ortalama,abs_ortanca,abs_std,ortalama,ortanca,std,resize_Corr_list,Wilks,Pilais,Hotelling,Roys]
+            model_names=["Coefficient of Determination","Test Time","Tarining Time"]
+            result_data={"Dataset Featuers":input_data}
+            for model_name in model_names:
+                with open("Regression/"+model_name+'.pkl', 'rb') as file:
+                        model = pickle.load(file)
+
+                result_data[model_name]=predict(model,pred_data)
+            
+            # You can perform any necessary data processing here
+            # For example, analyzing the columns based on problem type and dataset area
+            
             # Prepare a success response
             return jsonify({
                 "status": "success",
