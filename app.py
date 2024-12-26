@@ -129,16 +129,16 @@ def evaluate():
                 data_type="Both"
             
             data=Categorical_Data_Encoding(data)            
-            ortalama,ortanca,std,abs_ortalama,abs_ortanca,abs_std=CorrelationCalculator(data,classes)
-            Tek_boyut_data,outputs=Size_reducation(data,classes)
+            ortalama,ortanca,std,abs_ortalama,abs_ortanca,abs_std=CorrelationCalculator(data,outputs)
+            Tek_boyut_data,outputs=Size_reducation(data,outputs)
             resize_Corr_list=0
-            for c in range(classes):
+            for c in range(outputs):
                 resize_Corr_list+=round(np.corrcoef(list(Tek_boyut_data["PC1"]),list(outputs["output"+str(c+1)]))[0][1],5)
-            resize_Corr_list=round(resize_Corr_list/classes,5)
+            resize_Corr_list=round(resize_Corr_list/outputs,5)
             
             names=[n for n in list(data.columns) if "output" not in n]
             Wilks,Pilais,Hotelling,Roys=0,0,0,0 
-            for c in range(classes):
+            for c in range(outputs):
                 formul=' + '.join(names)+" ~ output"+str(c+1)
                 try:
                     
@@ -149,10 +149,10 @@ def evaluate():
                     Roys+=round(Manova["Value"]["output"+str(c+1)]["Roy's greatest root"],5)
                 except:               
                    pass
-            Wilks=round(Wilks/classes,5)
-            Pilais=round(Pilais/classes,5)
-            Hotelling=round(Hotelling/classes,5)
-            Roys=round(Roys/classes,5)
+            Wilks=round(Wilks/outputs,5)
+            Pilais=round(Pilais/outputs,5)
+            Hotelling=round(Hotelling/outputs,5)
+            Roys=round(Roys/outputs,5)
 
             input_data = {
                 "Application Area":dataset_area,
