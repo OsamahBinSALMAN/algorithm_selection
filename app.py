@@ -66,7 +66,7 @@ def Size_reducation(data,c):
     data_pca = pd.DataFrame(data_pca,columns=['PC1'])
     return data_pca,outs
 
- def CorrelationCalculator_class(data):
+def CorrelationCalculator_class(data):
     
     Corr_list=list(data.corr()['Label'])
     Corr_list=[n for n in Corr_list if n!=1 and str(n)!="nan"]
