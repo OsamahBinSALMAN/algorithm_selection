@@ -230,7 +230,7 @@ def evaluate():
                 return jsonify({"status": "error", "message": "Failed to Read Data"}), 400
 
             outputs=len([d for d in data.columns if "Label"  in d]) 
-            if outputs<1:
+            if outputs!=1:
                 return jsonify({"status": "error", "message": "In classification problems, it is important to rename the output column as 'Label'. The dataset dataset should contain only one output, representing the class or category assigned to each data point. However, even though the output column should be a single column, it can have multiple possible values corresponding to different classes. Each row in the dataset will have a label that indicates the category the data point belongs to. This format helps ensure that the model can correctly learn from the data and allows for better tracking and organization of the predictions during model evaluation. By using a single 'Label' column, you standardize the way outputs are represented, which aids in consistency across different models and datasets. This structure is also crucial when working with algorithms that expect a single target variable, such as classification models in machine learning frameworks."}), 400
             
             classes=len(list(dict.fromkeys(list(data["Label"]))))
