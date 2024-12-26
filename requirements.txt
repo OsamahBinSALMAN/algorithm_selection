@@ -1,7 +1,7 @@
 Flask
 gunicorn
 flask-cors
-numpy
+numpy==1.24.3
 scikit-learn==1.3.0
 pandas
 statsmodels
