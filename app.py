@@ -206,9 +206,9 @@ def evaluate():
             result_data={"Dataset Featuers":input_data}
             for model_name in model_names:
                 with open("Regression/"+model_name+'.pkl', 'rb') as file:
-                        model = pickle.load(file)
-                 if model_name=="Coefficient of Determination":
-                     model_name="Accuracy"
+                    model = pickle.load(file)
+                if model_name=="Coefficient of Determination":
+                    model_name="Accuracy"
                 result_data[model_name]=tahmin(model,pred_data)
             
             # You can perform any necessary data processing here
