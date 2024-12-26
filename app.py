@@ -9,6 +9,7 @@ from sklearn.decomposition import PCA
 from statsmodels.multivariate.manova import MANOVA
 import statistics
 
+warnings.filterwarnings('ignore')
 app = Flask(__name__)
 CORS(app)
 
