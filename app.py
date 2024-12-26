@@ -101,7 +101,14 @@ def tahmin_class(model,dt):
                  "Voting Hard","Random Forest","Calibrated","Bagging","Stacking"]
     sorted_algorithms = [x for _, x in sorted(zip(prediction, algorithms))]
     return sorted_algorithms
- 
+
+@app.after_request
+def add_csp_header(response):
+    # Set CSP to allow connect-src to the specified external API
+    response.headers['Content-Security-Policy'] = "connect-src 'self' https://algorithm-selection.onrender.com;"
+    return response
+
+
 @app.route('/evaluate', methods=['POST'])
 def evaluate():
     if 'file' not in request.files:
