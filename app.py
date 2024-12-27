@@ -12,7 +12,7 @@ import warnings
  
 warnings.filterwarnings('ignore')
 app = Flask(__name__)
-CORS(app,resources={r"/*": {"origins": "https://osamah-salman.neocities.org"}})
+CORS(app)#,resources={r"/*": {"origins": "https://osamah-salman.neocities.org"}}
 
 
 UPLOAD_FOLDER = 'uploads'
@@ -107,11 +107,11 @@ def add_csp_header(response):
     # Set CSP to allow connect-src to the specified external API
     response.headers['Content-Security-Policy'] = "connect-src 'self' https://algorithm-selection.onrender.com/evaluate https://osamah-salman.neocities.org;"
     return response
-"""
+
 @app.route('/')
 def index():
     return "Welcome to the Flask App!"
-
+"""
 @app.route('/evaluate', methods=['POST'])
 def evaluate():
     if 'file' not in request.files:
